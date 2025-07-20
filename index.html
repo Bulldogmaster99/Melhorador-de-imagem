@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Melhorador de Imagem com IA</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; background: #f4f4f4; }
+        form { background: white; display: inline-block; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
+        input, select, button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Melhorador de Imagem com IA</h1>
+
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required><br>
+        <label>Escala:</label>
+        <select name="scale">
+            <option value="1">1x</option>
+            <option value="2">2x</option>
+            <option value="4" selected>4x</option>
+        </select><br>
+        <label><input type="checkbox" name="restore_faces" checked> Restaurar Rostos com IA</label><br>
+        <button type="submit">Melhorar Imagem</button>
+    </form>
+
+    {% if result %}
+    <script>
+        window.onload = function () {
+            // Baixa automaticamente a imagem gerada
+            const link = document.createElement('a');
+            link.href = '/download';
+            link.download = 'imagem_melhorada.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+    </script>
+    <p><strong>✅ Imagem melhorada! O download iniciou automaticamente.</strong></p>
+    {% endif %}
+</body>
+</html>
