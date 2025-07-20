@@ -3,7 +3,6 @@ from PIL import Image
 import numpy as np
 import torch
 import os
-from io import BytesIO
 import cv2
 from realesrgan import RealESRGAN
 from gfpgan import GFPGANer
@@ -11,15 +10,14 @@ from gfpgan import GFPGANer
 app = Flask(__name__)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Baixar modelo se não existir
+# Baixar modelo se necessário
 if not os.path.exists("RealESRGAN_x4.pth"):
     os.system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5/RealESRGAN_x4.pth")
 
-# Carregar RealESRGAN
+# Carregar IA
 sr_model = RealESRGAN(device, scale=4)
 sr_model.load_weights("RealESRGAN_x4.pth")
 
-# Carregar GFPGAN
 gfpgan = GFPGANer(
     model_path=None,
     upscale=1,
@@ -46,13 +44,12 @@ def index():
             img_np = cv2.cvtColor(restored_bgr, cv2.COLOR_BGR2RGB)
             img = Image.fromarray(img_np)
 
-        # Super resolução
+        # Super-resolução
         sr = RealESRGAN(device, scale=scale)
         sr.load_weights(f"RealESRGAN_x{scale}.pth")
-        output_img = sr.predict(img)
-
+        output = sr.predict(img)
         output_path = "static/output.png"
-        output_img.save(output_path)
+        output.save(output_path)
 
         return render_template("index.html", result=True)
 
