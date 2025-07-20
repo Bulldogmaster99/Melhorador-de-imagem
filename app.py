@@ -11,14 +11,15 @@ from gfpgan import GFPGANer
 app = Flask(__name__)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Baixa modelo se necessário
+# Baixar modelo se não existir
 if not os.path.exists("RealESRGAN_x4.pth"):
     os.system("wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5/RealESRGAN_x4.pth")
 
-# Carrega modelos
+# Carregar RealESRGAN
 sr_model = RealESRGAN(device, scale=4)
 sr_model.load_weights("RealESRGAN_x4.pth")
 
+# Carregar GFPGAN
 gfpgan = GFPGANer(
     model_path=None,
     upscale=1,
@@ -38,12 +39,14 @@ def index():
         img = Image.open(file.stream).convert("RGB")
         img_np = np.array(img)
 
+        # Restaurar rosto
         if restore_faces:
             img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
             _, _, restored_bgr = gfpgan.enhance(img_bgr, has_aligned=False, only_center_face=False, paste_back=True)
             img_np = cv2.cvtColor(restored_bgr, cv2.COLOR_BGR2RGB)
             img = Image.fromarray(img_np)
 
+        # Super resolução
         sr = RealESRGAN(device, scale=scale)
         sr.load_weights(f"RealESRGAN_x{scale}.pth")
         output_img = sr.predict(img)
@@ -51,13 +54,13 @@ def index():
         output_path = "static/output.png"
         output_img.save(output_path)
 
-        return render_template("index.html", result=output_path)
+        return render_template("index.html", result=True)
 
-    return render_template("index.html", result=None)
+    return render_template("index.html", result=False)
 
 @app.route("/download")
 def download():
-    return send_file("static/output.png", as_attachment=True)
+    return send_file("static/output.png", as_attachment=True, download_name="imagem_melhorada.png")
 
 if __name__ == "__main__":
     app.run(debug=True)
