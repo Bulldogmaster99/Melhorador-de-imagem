@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Melhorador de Imagem com IA</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 50px; }
+        img { max-width: 90%; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Melhorador de Imagem com IA</h1>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required><br><br>
+        <label>Escala:</label>
+        <select name="scale">
+            <option value="1">1x</option>
+            <option value="2">2x</option>
+            <option value="4" selected>4x</option>
+        </select><br><br>
+        <label><input type="checkbox" name="restore_faces" checked> Restaurar Rostos (GFPGAN)</label><br><br>
+        <button type="submit">Melhorar Imagem</button>
+    </form>
+
+    {% if result %}
+        <h2>Resultado:</h2>
+        <img src="{{ result }}" alt="Imagem melhorada"><br><br>
+        <a href="/download">⬇️ Baixar imagem</a>
+    {% endif %}
+</body>
+</html>
