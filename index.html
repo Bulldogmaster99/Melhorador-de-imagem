@@ -4,39 +4,68 @@
     <meta charset="UTF-8">
     <title>Melhorador de Imagem com IA</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; background: #f4f4f4; }
-        form { background: white; display: inline-block; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
-        input, select, button { margin: 10px; padding: 10px; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f0f0;
+            text-align: center;
+            padding: 60px;
+        }
+
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        input, select, button {
+            margin: 10px 0;
+            padding: 12px;
+            width: 90%;
+            font-size: 16px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .success {
+            color: green;
+            margin-top: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <h1>🔧 Melhorador de Imagem com IA</h1>
+    <h1>🧠 Melhorador de Imagem com IA</h1>
 
-    <form action="/" method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data">
         <input type="file" name="image" accept="image/*" required><br>
-        <label>Escala:</label>
-        <select name="scale">
+        <label for="scale">Escala:</label><br>
+        <select name="scale" id="scale">
             <option value="1">1x</option>
             <option value="2">2x</option>
             <option value="4" selected>4x</option>
         </select><br>
-        <label><input type="checkbox" name="restore_faces" checked> Restaurar Rostos com IA</label><br>
+        <label>
+            <input type="checkbox" name="restore_faces" checked> Restaurar rostos com IA
+        </label><br><br>
         <button type="submit">Melhorar Imagem</button>
     </form>
 
     {% if result %}
-    <script>
-        window.onload = function () {
-            // Baixa automaticamente a imagem gerada
-            const link = document.createElement('a');
-            link.href = '/download';
-            link.download = 'imagem_melhorada.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
-    </script>
-    <p><strong>✅ Imagem melhorada! O download iniciou automaticamente.</strong></p>
+        <p class="success">✅ Imagem melhorada com sucesso! O download começou automaticamente.</p>
+        <script>
+            window.onload = () => {
+                const link = document.createElement("a");
+                link.href = "/download";
+                link.download = "imagem_melhorada.png";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+        </script>
     {% endif %}
 </body>
 </html>
